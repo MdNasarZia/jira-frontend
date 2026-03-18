@@ -1,9 +1,11 @@
 # CI/CD Pipeline Documentation
+
 # Jira Project — Backend + Frontend
 
 **Author:** Development Team
 **Date:** 2026-03-18
 **Projects:**
+
 - Backend: `D:\wamp64\www\jira-backend` (FastAPI + Python + Docker)
 - Frontend: `D:\wamp64\www\jira-frontend` (Next.js + TypeScript + pnpm)
 
@@ -100,13 +102,13 @@ http://localhost:80  (Apache — the "front door")
 
 ### What Runs Where
 
-| Service | Technology | Port | How It Runs |
-|---|---|---|---|
-| **Frontend** | Next.js 16 | 3000 | pm2 process manager (Node.js) |
-| **Backend API** | FastAPI | 8000 | Docker container |
-| **Database** | PostgreSQL 16 | 5432 | Docker container |
-| **Cache** | Redis 7 | 6379 | Docker container |
-| **Web Server** | Apache (WAMP) | 80 | WAMP service |
+| Service         | Technology    | Port | How It Runs                   |
+| --------------- | ------------- | ---- | ----------------------------- |
+| **Frontend**    | Next.js 16    | 3000 | pm2 process manager (Node.js) |
+| **Backend API** | FastAPI       | 8000 | Docker container              |
+| **Database**    | PostgreSQL 16 | 5432 | Docker container              |
+| **Cache**       | Redis 7       | 6379 | Docker container              |
+| **Web Server**  | Apache (WAMP) | 80   | WAMP service                  |
 
 ### Why Apache in Front?
 
@@ -123,26 +125,26 @@ Apache acts as a **reverse proxy** — it's the only port exposed to users (port
 
 ### Backend Tools
 
-| Tool | Purpose | Why This Tool |
-|---|---|---|
-| **black** | Python code formatter | The Python standard formatter, enforces consistent style automatically |
-| **isort** | Sort Python imports | Keeps import sections clean and consistent |
-| **ruff** | Python linter | Fast, modern linter that catches bugs, bad patterns, and security issues |
-| **pytest** | Python test runner | The standard Python test framework |
-| **GitHub Actions** | CI/CD platform | Free for open source, integrated with GitHub, no extra setup |
-| **Docker** | Containerization | Consistent environment, easy to start/stop services |
-| **Docker Compose** | Multi-container management | Manages backend + database + Redis together |
-| **Alembic** | Database migrations | Tracks schema changes, applies them automatically on deploy |
+| Tool               | Purpose                    | Why This Tool                                                            |
+| ------------------ | -------------------------- | ------------------------------------------------------------------------ |
+| **black**          | Python code formatter      | The Python standard formatter, enforces consistent style automatically   |
+| **isort**          | Sort Python imports        | Keeps import sections clean and consistent                               |
+| **ruff**           | Python linter              | Fast, modern linter that catches bugs, bad patterns, and security issues |
+| **pytest**         | Python test runner         | The standard Python test framework                                       |
+| **GitHub Actions** | CI/CD platform             | Free for open source, integrated with GitHub, no extra setup             |
+| **Docker**         | Containerization           | Consistent environment, easy to start/stop services                      |
+| **Docker Compose** | Multi-container management | Manages backend + database + Redis together                              |
+| **Alembic**        | Database migrations        | Tracks schema changes, applies them automatically on deploy              |
 
 ### Frontend Tools
 
-| Tool | Purpose | Why This Tool |
-|---|---|---|
-| **Prettier** | Code formatter | The JavaScript/TypeScript standard, formats HTML/CSS/JS/TS |
-| **ESLint** | JavaScript/TypeScript linter | Catches bugs, enforces React/Next.js best practices |
-| **TypeScript** | Type checking (`tsc`) | Catches type errors before they reach production |
-| **pnpm** | Package manager | Faster than npm, uses less disk space, strict dependency resolution |
-| **pm2** | Node.js process manager | Keeps Next.js running as a background service, restarts on crash |
+| Tool           | Purpose                      | Why This Tool                                                       |
+| -------------- | ---------------------------- | ------------------------------------------------------------------- |
+| **Prettier**   | Code formatter               | The JavaScript/TypeScript standard, formats HTML/CSS/JS/TS          |
+| **ESLint**     | JavaScript/TypeScript linter | Catches bugs, enforces React/Next.js best practices                 |
+| **TypeScript** | Type checking (`tsc`)        | Catches type errors before they reach production                    |
+| **pnpm**       | Package manager              | Faster than npm, uses less disk space, strict dependency resolution |
+| **pm2**        | Node.js process manager      | Keeps Next.js running as a background service, restarts on crash    |
 
 ---
 
@@ -183,6 +185,7 @@ ignore = [
 ```
 
 **What each ruff rule set catches:**
+
 - `E`, `W` — PEP 8 style errors and warnings
 - `F` — Pyflakes (undefined names, unused imports)
 - `I` — Import sorting violations
@@ -269,6 +272,7 @@ bash scripts/deploy.sh
 ```
 
 The script uses `set -euo pipefail` — this means:
+
 - `-e` — exit immediately if any command fails
 - `-u` — error on undefined variables
 - `-o pipefail` — catch errors inside pipes
@@ -294,6 +298,7 @@ jira-backend/
 ### 5.1 The Frontend Stack
 
 The frontend is a **Next.js 16** application with:
+
 - **React 19** for the UI
 - **TypeScript** for type safety
 - **Tailwind CSS 4** for styling
@@ -301,6 +306,7 @@ The frontend is a **Next.js 16** application with:
 - **pnpm** as the package manager
 
 It was NOT configured with:
+
 - Any code formatter (no Prettier)
 - Any linter config (ESLint script existed but no config file)
 - Any CI/CD
@@ -329,11 +335,7 @@ Why `prettier-plugin-tailwindcss`? It automatically sorts Tailwind CSS class nam
 ```json
 // .eslintrc.json
 {
-  "extends": [
-    "next/core-web-vitals",
-    "next/typescript",
-    "prettier"
-  ]
+  "extends": ["next/core-web-vitals", "next/typescript", "prettier"]
 }
 ```
 
@@ -357,6 +359,7 @@ Why `prettier-plugin-tailwindcss`? It automatically sorts Tailwind CSS class nam
 ```
 
 **What each script does:**
+
 - `lint` — Check code quality, fail if any warnings (stricter than default)
 - `lint:fix` — Auto-fix fixable lint issues
 - `format` — Format all files with Prettier (run locally to fix formatting)
@@ -423,6 +426,7 @@ pm2 process: "jira-frontend"
 ```
 
 pm2 commands you'll use:
+
 ```bash
 pm2 list                    # See all running processes
 pm2 logs jira-frontend      # View live logs
@@ -455,10 +459,12 @@ jira-frontend/
 ### Why Apache?
 
 You already have WAMP installed, which includes Apache. Apache runs on port 80 (the default HTTP port). Without it, users would have to remember port numbers:
+
 - `http://localhost:3000` for the frontend
 - `http://localhost:8000` for the backend
 
 With Apache as a reverse proxy, everything is on `http://localhost`:
+
 - Frontend: `http://localhost/`
 - Backend API: `http://localhost:8000/` (direct) or via Apache
 - Backend Swagger: `http://localhost:8000/docs` (direct)
@@ -482,6 +488,7 @@ ProxyPass / http://127.0.0.1:3000/            ← must be LAST (catch-all)
 ### How the Frontend Calls the Backend
 
 The frontend's API URL is configured in `.env.local`:
+
 ```
 NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
 ```
@@ -533,6 +540,7 @@ This is fine for local development. In production on a real server, you would ch
 Each project has its own GitHub repo with its own CI/CD:
 
 **jira-backend repo:**
+
 ```
 Push to any branch → CI (GitHub cloud):
   black check → isort check → ruff lint → pytest unit tests
@@ -542,6 +550,7 @@ Push to main → CD (your machine):
 ```
 
 **jira-frontend repo:**
+
 ```
 Push to any branch → CI (GitHub cloud):
   prettier check → eslint → tsc type-check → next build
@@ -561,6 +570,7 @@ This section lists everything you need to do **one time** to make the CI/CD work
 #### A1. Push Backend to GitHub
 
 If not already done:
+
 ```bash
 cd D:\wamp64\www\jira-backend
 git init
@@ -574,10 +584,10 @@ git push -u origin main
 
 Go to: **GitHub → jira-backend repo → Settings → Secrets and variables → Actions → New repository secret**
 
-| Secret Name | How to Generate | What It's For |
-|---|---|---|
-| `SECRET_KEY` | `python -c "import secrets; print(secrets.token_hex(32))"` | JWT signing key |
-| `DB_PASSWORD` | Choose any password (e.g., `jira_secure_2026`) | PostgreSQL password |
+| Secret Name   | How to Generate                                            | What It's For       |
+| ------------- | ---------------------------------------------------------- | ------------------- |
+| `SECRET_KEY`  | `python -c "import secrets; print(secrets.token_hex(32))"` | JWT signing key     |
+| `DB_PASSWORD` | Choose any password (e.g., `jira_secure_2026`)             | PostgreSQL password |
 
 #### A3. Set Up GitHub Actions Self-Hosted Runner
 
@@ -587,6 +597,7 @@ This runner is shared by BOTH projects if you create only one. Or you can create
 2. Select: **Windows**, **x64**
 3. Follow the exact commands GitHub shows. They include a one-time token.
 4. Run these in **PowerShell as Administrator**:
+
    ```powershell
    mkdir C:\actions-runner
    cd C:\actions-runner
@@ -596,6 +607,7 @@ This runner is shared by BOTH projects if you create only one. Or you can create
    .\svc.cmd install
    .\svc.cmd start
    ```
+
 5. **Fix Docker permissions** (runner needs to access Docker Desktop):
 
    **Method 1 — Service runs as your user account (recommended for personal machines):**
@@ -652,8 +664,8 @@ git push -u origin main
 
 Go to: **GitHub → jira-frontend repo → Settings → Secrets and variables → Actions**
 
-| Secret Name | Value | What It's For |
-|---|---|---|
+| Secret Name           | Value                          | What It's For                    |
+| --------------------- | ------------------------------ | -------------------------------- |
 | `NEXT_PUBLIC_API_URL` | `http://localhost:8000/api/v1` | Backend API URL for the frontend |
 
 #### B3. Set Up GitHub Actions Self-Hosted Runner (Frontend Repo)
@@ -661,10 +673,12 @@ Go to: **GitHub → jira-frontend repo → Settings → Secrets and variables �
 You need to register the runner in the frontend repo too. Options:
 
 **Option A: Create a second runner** (recommended — separate processes):
+
 - GitHub → jira-frontend repo → Settings → Actions → Runners → New self-hosted runner
 - Run the setup in a different directory, e.g., `C:\actions-runner-frontend`
 
 **Option B: Use one runner for both repos** (simpler):
+
 - Create an **organization** on GitHub and add both repos to it
 - Register the runner at the organization level (Settings → Actions → Runners)
 - Both repos share the same runner
@@ -672,6 +686,7 @@ You need to register the runner in the frontend repo too. Options:
 #### B4. Install pm2 Globally (for Next.js process management)
 
 Open PowerShell and run:
+
 ```powershell
 npm install -g pm2
 ```
@@ -679,6 +694,7 @@ npm install -g pm2
 Verify: `pm2 --version` should print a version number.
 
 For pm2 to survive Windows reboots, install the startup service:
+
 ```powershell
 npm install -g pm2-windows-service
 pm2-service-install
@@ -789,17 +805,20 @@ git push origin feature/my-new-feature
 ### When Something Breaks
 
 **CI fails (red X on GitHub):**
+
 1. Click the failed job
 2. Read the error message
 3. Fix locally using the same commands CI uses
 4. Push again — CI re-runs automatically
 
 **CD fails (deploy fails):**
+
 1. Check GitHub Actions logs for the error
 2. On your machine, check Docker logs: `docker compose logs app --tail=50`
 3. Check pm2 logs: `pm2 logs jira-frontend`
 
 **App is down after deploy:**
+
 ```bash
 # Backend
 docker compose ps          # Are containers running?
@@ -817,31 +836,37 @@ pm2 start pnpm --name jira-frontend -- start   # Start if stopped
 ### Common Issues
 
 **"Docker: permission denied"** on the self-hosted runner:
+
 - **Method 1 (personal machine):** Change the runner service account via `services.msc` → GitHub Actions Runner → Log On tab → set to your Windows user. Also run: `net localgroup docker-users YOUR_USERNAME /add` and reboot.
 - **Method 2 (office/restricted machine):** Don't use the service. Instead run `./run.cmd` manually in PowerShell before triggering a deploy. Then use the manual trigger: GitHub → Actions → CD → Run workflow.
 
 **Apache "proxy not found" error (500):**
+
 - Apache can't reach the backend/frontend
 - Check: is Docker running? `docker compose ps`
 - Check: is pm2 running? `pm2 list`
 - Verify ports: `netstat -an | findstr "8000 3000"`
 
 **"pnpm: command not found"** on the runner:
+
 - pnpm needs to be installed on the machine where the runner runs
 - The CD workflow installs pnpm automatically via `pnpm/action-setup@v4`
 - If that fails, install manually: `npm install -g pnpm`
 
 **Next.js build fails with TypeScript errors:**
+
 - The project has `ignoreBuildErrors: true` in `next.config.mjs` so `next build` won't fail
 - But `pnpm type-check` (tsc --noEmit) will surface them
 - Fix the TypeScript errors or temporarily remove the `type-check` step from ci.yml
 
 **"black: reformatted X files"** (CI fails on format check):
+
 - Run `python -m black app/ tests/ main.py` locally
 - Commit the formatted files
 - Push again
 
 **"prettier: X files need formatting"** (CI fails on format check):
+
 - Run `pnpm format` locally (in jira-frontend)
 - Commit the formatted files
 - Push again
@@ -851,6 +876,7 @@ pm2 start pnpm --name jira-frontend -- start   # Start if stopped
 ## Quick Reference
 
 ### Backend Commands
+
 ```bash
 # Run locally
 uvicorn main:app --reload --port 8000
@@ -875,6 +901,7 @@ alembic revision --autogenerate -m "describe the change"
 ```
 
 ### Frontend Commands
+
 ```bash
 # Run locally
 pnpm dev
@@ -899,6 +926,7 @@ pm2 restart jira-frontend
 ```
 
 ### GitHub Actions Status
+
 ```
 Backend CI:  https://github.com/YOUR_USERNAME/jira-backend/actions
 Frontend CI: https://github.com/YOUR_USERNAME/jira-frontend/actions
