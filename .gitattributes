@@ -1,0 +1,13 @@
+# Ensure shell scripts always have LF line endings (required for bash on Windows)
+*.sh text eol=lf
+
+# Standard source files
+*.ts text eol=lf
+*.tsx text eol=lf
+*.js text eol=lf
+*.mjs text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.md text eol=lf
+*.css text eol=lf

@@ -1,0 +1,6 @@
+{
+  "permissions": {
+    "additionalDirectories": ["d:\\wamp64\\www\\jira-frontend\\app\\projects\\[id]\\issues"],
+    "allow": ["Bash(head -50 /d/wamp64/www/jira-frontend/app/projects/[id]/page.tsx)"]
+  }
+}
