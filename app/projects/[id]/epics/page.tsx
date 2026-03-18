@@ -88,8 +88,8 @@ export default function ProjectEpicsPage({ params }: { params: Promise<{ id: str
         title: editData.title,
         description: editData.description || undefined,
         status: editData.status?.toLowerCase(),
-        start_date: editData.start_date || undefined,
-        end_date: editData.end_date || undefined,
+        startDate: editData.start_date || undefined,
+        endDate: editData.end_date || undefined,
       });
       setEditingId(null);
       setEditData(null);

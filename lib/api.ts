@@ -1,5 +1,6 @@
 // Delegates all requests to callApi (JWT + auto-refresh via FastAPI backend)
 import { callApi } from "./callApi";
+import { Project } from "./types";
 
 export { ApiError } from "./callApi";
 
@@ -55,7 +56,7 @@ export const projectsApi = {
   },
 
   getById: async (id: string) => {
-    return await apiFetch(`/projects/${id}`, { method: "GET" });
+    return await apiFetch<Project>(`/projects/${id}`, { method: "GET" });
   },
 
   create: async (data: { name: string; description?: string; key: string }) => {
