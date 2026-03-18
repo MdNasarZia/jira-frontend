@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { ProtectedLayout } from "@/components/protected-layout";
@@ -21,7 +21,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { Plus, Folder, Users, Calendar } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
-export default function ProjectsPage() {
+function ProjectsContent() {
   const { user } = useAuth();
   const searchParams = useSearchParams();
   const { data: projects, loading, refetch: refetchProjects } = useProjects();
@@ -226,5 +226,13 @@ export default function ProjectsPage() {
         </main>
       </div>
     </ProtectedLayout>
+  );
+}
+
+export default function ProjectsPage() {
+  return (
+    <Suspense>
+      <ProjectsContent />
+    </Suspense>
   );
 }
