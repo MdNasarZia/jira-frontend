@@ -26,6 +26,8 @@ export interface Project {
   created_by: string;
   createdAt: string;
   updatedAt: string;
+  members?: { id: string; name: string; email: string; role?: string }[];
+  member_count?: number;
 }
 
 // Issue types — aligned with API enums
