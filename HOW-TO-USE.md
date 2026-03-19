@@ -24,33 +24,33 @@ Run through this once. If everything is already installed and configured, skip t
 
 ### Required Software
 
-| Software | How to Check | Install If Missing |
-|---|---|---|
-| Docker Desktop | `docker version` | See CICD.md §A0 |
-| Node.js 20+ | `node --version` | https://nodejs.org (LTS) |
-| pnpm 10 | `pnpm --version` | `npm install -g pnpm` |
-| pm2 | `pm2 --version` | `npm install -g pm2` |
-| WAMP (Apache) | WAMP tray icon is green | https://wampserver.com |
+| Software       | How to Check            | Install If Missing       |
+| -------------- | ----------------------- | ------------------------ |
+| Docker Desktop | `docker version`        | See CICD.md §A0          |
+| Node.js 20+    | `node --version`        | https://nodejs.org (LTS) |
+| pnpm 10        | `pnpm --version`        | `npm install -g pnpm`    |
+| pm2            | `pm2 --version`         | `npm install -g pm2`     |
+| WAMP (Apache)  | WAMP tray icon is green | https://wampserver.com   |
 
 ### Required Configuration
 
-| Item | How to Check | How to Fix |
-|---|---|---|
-| Docker Desktop is running | Whale icon in system tray is green | Open Docker Desktop |
-| Apache proxy modules enabled | `httpd.exe -t` says `Syntax OK` | See CICD.md §A4 |
-| `jira-api.conf` is in `D:\wamp64\alias\` | `ls D:\wamp64\alias\jira-api.conf` | Already there — see CICD.md §A4 |
-| Backend `.env` exists | `ls D:\wamp64\www\jira-backend\.env` | `cp .env.example .env` |
-| Frontend `.env.local` exists | `ls D:\wamp64\www\jira-frontend\.env.local` | `echo NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1 > .env.local` |
+| Item                                     | How to Check                                | How to Fix                                                           |
+| ---------------------------------------- | ------------------------------------------- | -------------------------------------------------------------------- |
+| Docker Desktop is running                | Whale icon in system tray is green          | Open Docker Desktop                                                  |
+| Apache proxy modules enabled             | `httpd.exe -t` says `Syntax OK`             | See CICD.md §A4                                                      |
+| `jira-api.conf` is in `D:\wamp64\alias\` | `ls D:\wamp64\alias\jira-api.conf`          | Already there — see CICD.md §A4                                      |
+| Backend `.env` exists                    | `ls D:\wamp64\www\jira-backend\.env`        | `cp .env.example .env`                                               |
+| Frontend `.env.local` exists             | `ls D:\wamp64\www\jira-frontend\.env.local` | `echo NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1 > .env.local` |
 
 ### GitHub Secrets (for CD pipeline)
 
 These are needed only to trigger CD from GitHub. Not needed to run locally.
 
-| Repo | Secret | Value |
-|---|---|---|
-| jira-backend | `SECRET_KEY` | Generate: `python -c "import secrets; print(secrets.token_hex(32))"` |
-| jira-backend | `DB_PASSWORD` | Any strong password, e.g. `jira_secure_2026` |
-| jira-frontend | `NEXT_PUBLIC_API_URL` | `http://localhost:8000/api/v1` |
+| Repo          | Secret                | Value                                                                |
+| ------------- | --------------------- | -------------------------------------------------------------------- |
+| jira-backend  | `SECRET_KEY`          | Generate: `python -c "import secrets; print(secrets.token_hex(32))"` |
+| jira-backend  | `DB_PASSWORD`         | Any strong password, e.g. `jira_secure_2026`                         |
+| jira-frontend | `NEXT_PUBLIC_API_URL` | `http://localhost:8000/api/v1`                                       |
 
 ---
 
@@ -73,6 +73,7 @@ docker compose up -d
 ```
 
 This starts three containers:
+
 - `app` — FastAPI on port 8000
 - `db` — PostgreSQL 16 on port 5432
 - `redis` — Redis 7 on port 6379
@@ -149,8 +150,9 @@ curl.exe http://localhost:8000/health
 ```
 
 Expected response:
+
 ```json
-{"status":"ok"}
+{ "status": "ok" }
 ```
 
 ### 3.3 Backend via Apache proxy
@@ -244,12 +246,12 @@ Shows your assigned issues, recent activity, and project overview.
 
 Navigate to a project, then:
 
-| Page | URL | What You Can Do |
-|---|---|---|
-| Issues | `/projects/{id}/issues/{issueId}` | View, edit, assign, change status |
-| Backlog | `/projects/{id}/backlog` | Order and prioritize backlog items |
-| Board | `/projects/{id}/board` | Drag-and-drop sprint board |
-| Epics | `/projects/{id}/epics` | Manage epics (groups of stories) |
+| Page    | URL                               | What You Can Do                    |
+| ------- | --------------------------------- | ---------------------------------- |
+| Issues  | `/projects/{id}/issues/{issueId}` | View, edit, assign, change status  |
+| Backlog | `/projects/{id}/backlog`          | Order and prioritize backlog items |
+| Board   | `/projects/{id}/board`            | Drag-and-drop sprint board         |
+| Epics   | `/projects/{id}/epics`            | Manage epics (groups of stories)   |
 
 **Issue types:** Story, Task, Bug
 **Issue statuses:** `todo` → `in_progress` → `in_review` → `done`
@@ -263,6 +265,7 @@ Some operations require Admin role and must be done through the API directly:
 3. Use `PATCH /api/v1/users/{user_id}` to set `system_role: "admin"`
 
 Admin can:
+
 - Manage all users
 - Access all projects
 - Archive/delete projects
@@ -277,16 +280,18 @@ CI runs on **GitHub cloud** every time you push any branch. No local setup neede
 
 **What CI checks:**
 
-| Project | Checks |
-|---|---|
-| Backend | black format, isort imports, ruff lint, pytest unit tests |
+| Project  | Checks                                                     |
+| -------- | ---------------------------------------------------------- |
+| Backend  | black format, isort imports, ruff lint, pytest unit tests  |
 | Frontend | prettier format, eslint, TypeScript type-check, next build |
 
 **Watch CI run:**
+
 - Go to GitHub → your repo → **Actions** tab
 - Click the running workflow to see live logs
 
 **If CI fails:**
+
 1. Click the failed step to see the error
 2. Fix it locally (see Section 8 for quick-fix commands)
 3. Push again — CI re-runs automatically
@@ -296,21 +301,24 @@ CI runs on **GitHub cloud** every time you push any branch. No local setup neede
 CD runs on **your local machine** (self-hosted runner) when code is pushed to `main`.
 
 **Requirements before CD works:**
+
 1. GitHub Actions self-hosted runner must be installed and running (see CICD.md §A3)
 2. Docker Desktop must be running
 3. GitHub Secrets must be configured (see Section 1)
 
 **What CD does:**
 
-| Project | What Happens |
-|---|---|
-| Backend | Builds Docker image → runs `alembic upgrade head` → restarts containers |
-| Frontend | Runs `pnpm install` + `pnpm build` → `pm2 restart jira-frontend` |
+| Project  | What Happens                                                            |
+| -------- | ----------------------------------------------------------------------- |
+| Backend  | Builds Docker image → runs `alembic upgrade head` → restarts containers |
+| Frontend | Runs `pnpm install` + `pnpm build` → `pm2 restart jira-frontend`        |
 
 **To trigger CD manually** (without pushing code):
+
 - GitHub → your repo → Actions → **CD** → **Run workflow** → **Run workflow**
 
 **Watch CD run:**
+
 - GitHub → Actions tab → click the CD workflow run
 - On your machine: `docker compose logs app --tail=50` (backend) or `pm2 logs jira-frontend` (frontend)
 
@@ -378,6 +386,7 @@ docker compose logs app --tail=50
 ```
 
 Common causes:
+
 - `.env` file missing → `cp .env.example .env`
 - `SECRET_KEY` not set → add a real key to `.env`
 - Port 8000 already in use → `netstat -an | findstr 8000` → kill the process
@@ -393,6 +402,7 @@ docker compose logs db --tail=20
 ```
 
 Common causes:
+
 - Port 5432 already in use (another PostgreSQL running, e.g. WAMP's PostgreSQL)
 - Corrupt data volume → `docker compose down -v` (WARNING: deletes all DB data)
 
@@ -428,6 +438,7 @@ pm2 logs jira-frontend --lines 50
 ```
 
 Common causes:
+
 - `.env.local` missing or has wrong API URL → recreate:
   ```bash
   echo NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1 > D:\wamp64\www\jira-frontend\.env.local
@@ -508,6 +519,7 @@ docker compose exec app alembic history
 **Symptom:** App starts but JWTs may be weak.
 
 The `.env` file ships with:
+
 ```
 SECRET_KEY=change-me-to-a-very-long-random-string-at-least-32-chars
 ```
@@ -547,22 +559,22 @@ pm2 restart jira-frontend   # or: pm2 start pnpm --name jira-frontend -- start
 
 ### Service URLs
 
-| URL | What It Is |
-|---|---|
-| http://localhost | Full app (via Apache — use this) |
-| http://localhost:3000 | Frontend direct (Next.js) |
-| http://localhost:8000/health | Backend health check |
-| http://localhost:8000/docs | Swagger UI (interactive API docs) |
-| http://localhost:8000/redoc | ReDoc API docs |
-| http://localhost:5432 | PostgreSQL (connect with `psql` or pgAdmin) |
+| URL                          | What It Is                                  |
+| ---------------------------- | ------------------------------------------- |
+| http://localhost             | Full app (via Apache — use this)            |
+| http://localhost:3000        | Frontend direct (Next.js)                   |
+| http://localhost:8000/health | Backend health check                        |
+| http://localhost:8000/docs   | Swagger UI (interactive API docs)           |
+| http://localhost:8000/redoc  | ReDoc API docs                              |
+| http://localhost:5432        | PostgreSQL (connect with `psql` or pgAdmin) |
 
 ### Credentials (default local dev)
 
-| Service | User | Password |
-|---|---|---|
-| PostgreSQL | `jira` | `jira` |
-| Redis | _(no auth)_ | — |
-| App admin | _(create via API)_ | — |
+| Service    | User               | Password |
+| ---------- | ------------------ | -------- |
+| PostgreSQL | `jira`             | `jira`   |
+| Redis      | _(no auth)_        | —        |
+| App admin  | _(create via API)_ | —        |
 
 ### Backend Commands
 
